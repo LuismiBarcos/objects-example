@@ -1,0 +1,27 @@
+{
+"active": true,
+"label": {
+  "en-US": "#{name}"
+},
+"name": "#{name}",
+"pluralLabel": {
+  "en-US": "#{pluralName}"
+},
+"portlet": true,
+"scope": "company",
+"objectFields": [
+  {
+    "DBType": "String",
+    "indexed": true,
+    "indexedAsKeyword": false,
+    "indexedLanguageId": "",
+    "label": {
+      "en_US": "#{fieldName}"
+    },
+    "listTypeDefinitionId": 0,
+    "name": "#{fieldName}",
+    "required": true,
+    "type": "String"
+  }
+]
+}
