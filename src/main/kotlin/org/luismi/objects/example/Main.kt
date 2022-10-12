@@ -12,5 +12,7 @@ fun main() {
 
     val asker = DependencyInjector.getDependency<Asker>(Asker::class)
 
-    asker.askForInfo("Create Students as Custom Objects? (y/n)")
+    val askForInfo = asker.askForInfo("Create Students as Custom Objects? (y/n)")
+
+    println(askForInfo)
 }
