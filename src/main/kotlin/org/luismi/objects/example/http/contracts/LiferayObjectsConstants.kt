@@ -7,4 +7,5 @@ object LiferayObjectsConstants {
     const val SERVER = "http://localhost:8080/o"
     const val OBJECT_ADMIN_DEFINITION = "/object-admin/v1.0/object-definitions"
     const val OBJECT_RELATIONSHIPS = "/object-relationships"
+    const val OBJECT_LAYOUTS = "/object-layouts"
 }

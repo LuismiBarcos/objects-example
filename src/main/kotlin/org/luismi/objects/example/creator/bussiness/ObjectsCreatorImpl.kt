@@ -22,7 +22,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
         val subjectObjectDefinitionId = createObjectDefinition("Subject", "subjectName", "Subjects")
         val studentObjectDefinitionId = createObjectDefinition("Student", "studentName", "Students")
 
-        createObjectRelationship(
+        val universityStudentsId = createObjectRelationship(
             "universityStudents",
             universityObjectDefinitionId.toString(),
             studentObjectDefinitionId.toString(),
@@ -30,12 +30,32 @@ class ObjectsCreatorImpl: ObjectsCreator {
             "oneToMany"
         )
 
-        createObjectRelationship(
+        val studentSubjectsId = createObjectRelationship(
             "studentSubjects",
             studentObjectDefinitionId.toString(),
             subjectObjectDefinitionId.toString(),
             "Subject",
             "manyToMany"
+        )
+
+        createObjectLayout(
+            universityObjectDefinitionId.toString(),
+            "/object-layout.txt",
+            "UniversityLayout",
+            "University",
+            "universityName",
+            "Students",
+            universityStudentsId.toString()
+        )
+
+        createObjectLayout(
+            subjectObjectDefinitionId.toString(),
+            "/object-layout.txt",
+            "SubjectLayout",
+            "Subject",
+            "subjectName",
+            "Students",
+            (studentSubjectsId + 1).toString()
         )
     }
 
@@ -63,19 +83,49 @@ class ObjectsCreatorImpl: ObjectsCreator {
         objectDefinitionId2: String,
         objectDefinitionName2: String,
         relationshipType: String
+    ): Int =
+        JsonPath
+            .parse(
+                invoker.invoke(
+                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
+                            "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
+                    HTTPMethods.POST,
+                    parser.parseText(
+                        getResource("/object-relationship.txt"),
+                        buildMap {
+                            put(ParserConstants.RELATIONSHIP_NAME, relationshipName)
+                            put(ParserConstants.OBJECT_DEFINITION_ID_1, objectDefinitionId1)
+                            put(ParserConstants.OBJECT_DEFINITION_ID_2, objectDefinitionId2)
+                            put(ParserConstants.OBJECT_DEFINITION_NAME_2, objectDefinitionName2)
+                            put(ParserConstants.RELATIONSHIP_TYPE, relationshipType)
+                        }
+                    )
+                )
+            )
+            .read("id")
+
+    private fun createObjectLayout(
+        objectDefinitionId: String,
+        resourceName: String,
+        name: String,
+        objectDefinitionName: String,
+        fieldName: String,
+        relatedObjectDefinitionName: String,
+        objectRelationshipId: String
     ) {
         invoker.invoke(
             "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
-                    "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
+                    "$objectDefinitionId${LiferayObjectsConstants.OBJECT_LAYOUTS}",
             HTTPMethods.POST,
             parser.parseText(
-                getResource("/object-relationship.txt"),
+                getResource(resourceName),
                 buildMap {
-                    put(ParserConstants.RELATIONSHIP_NAME, relationshipName)
-                    put(ParserConstants.OBJECT_DEFINITION_ID_1, objectDefinitionId1)
-                    put(ParserConstants.OBJECT_DEFINITION_ID_2, objectDefinitionId2)
-                    put(ParserConstants.OBJECT_DEFINITION_NAME_2, objectDefinitionName2)
-                    put(ParserConstants.RELATIONSHIP_TYPE, relationshipType)
+                    put(ParserConstants.NAME, name)
+                    put(ParserConstants.OBJECT_DEFINITION_ID, objectDefinitionId)
+                    put(ParserConstants.OBJECT_DEFINITION_NAME, objectDefinitionName)
+                    put(ParserConstants.FIELD_NAME, fieldName)
+                    put(ParserConstants.RELATED_OBJECT_DEFINITION_NAME, relatedObjectDefinitionName)
+                    put(ParserConstants.OBJECT_RELATIONSHIP_ID, objectRelationshipId)
                 }
             )
         )
