@@ -67,6 +67,10 @@ class ObjectsCreatorImpl: ObjectsCreator {
             "Subjects",
             (studentSubjectsId + 1).toString()
         )
+
+        publishObjectDefinition(universityObjectDefinitionId.toString())
+        publishObjectDefinition(subjectObjectDefinitionId.toString())
+        publishObjectDefinition(studentObjectDefinitionId.toString())
     }
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
@@ -138,6 +142,15 @@ class ObjectsCreatorImpl: ObjectsCreator {
                     put(ParserConstants.OBJECT_RELATIONSHIP_ID, objectRelationshipId)
                 }
             )
+        )
+    }
+
+    private fun publishObjectDefinition(objectDefinitionId: String) {
+        invoker.invoke(
+            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
+                    "$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
+            HTTPMethods.POST,
+            ""
         )
     }
 

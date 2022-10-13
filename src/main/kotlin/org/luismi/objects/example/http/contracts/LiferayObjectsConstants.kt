@@ -8,4 +8,5 @@ object LiferayObjectsConstants {
     const val OBJECT_ADMIN_DEFINITION = "/object-admin/v1.0/object-definitions"
     const val OBJECT_RELATIONSHIPS = "/object-relationships"
     const val OBJECT_LAYOUTS = "/object-layouts"
+    const val PUBLISH = "/publish"
 }

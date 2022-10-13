@@ -1,11 +1,8 @@
 package org.luismi.objects.example.http.bussiness
 
-import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.Invoker
-import java.io.BufferedReader
 import java.io.DataOutputStream
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -47,14 +44,15 @@ class InvokerImpl: Invoker {
 
         println("Requests sent\nResponse code: ${connection.responseCode}")
 
-        return if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-            connection.inputStream.bufferedReader().readText()
-        } else {
-            connection.errorStream.bufferedReader().readText()
-    //            val context = JsonPath.parse(data)
-    //            val status = context.read<String>("status")
-    //            println("RESULT --> $status")
-        }
+        return connection.inputStream.bufferedReader().readText()
+//        return if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+//            connection.inputStream.bufferedReader().readText()
+//        } else {
+//            connection.errorStream.bufferedReader().readText()
+//    //            val context = JsonPath.parse(data)
+//    //            val status = context.read<String>("status")
+//    //            println("RESULT --> $status")
+//        }
 
     }
 }
