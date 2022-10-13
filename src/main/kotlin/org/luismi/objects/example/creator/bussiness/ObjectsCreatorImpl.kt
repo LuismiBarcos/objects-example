@@ -1,5 +1,6 @@
 package org.luismi.objects.example.creator.bussiness
 
+import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
 import org.luismi.objects.example.creator.contracts.ObjectsCreator
 import org.luismi.objects.example.dependency.injector.DependencyInjector
@@ -17,33 +18,42 @@ class ObjectsCreatorImpl: ObjectsCreator {
     private val invoker = DependencyInjector.getDependency<Invoker>(Invoker::class)
 
     override fun createObjects(askerOptions: AskerOptions) {
-        createUniversityObjectDefinition()
-        createSubjectObjectDefinition()
-        createStudentObjectDefinition()
+        val universityObjectDefinitionId = createUniversityObjectDefinition()
+        val subjectObjectDefinitionId = createSubjectObjectDefinition()
+        val studentObjectDefinitionId = createStudentObjectDefinition()
+
+        println("Object definitions:" +
+                "\n\tUniversity: $universityObjectDefinitionId" +
+                "\n\tSubject: $subjectObjectDefinitionId" +
+                "\n\tStudent: $studentObjectDefinitionId"
+        )
     }
 
-    private fun createUniversityObjectDefinition() {
-        invoker.invoke(
+    private fun createUniversityObjectDefinition(): Int {
+        val result = invoker.invoke(
             createObjectDefinitionPOST(),
             HTTPMethods.POST,
             parseObjectDefinition("University", "universityName", "universities")
         )
+        return JsonPath.parse(result).read<Int>("id")
     }
 
-    private fun createSubjectObjectDefinition() {
-        invoker.invoke(
+    private fun createSubjectObjectDefinition(): Int {
+        val result = invoker.invoke(
             createObjectDefinitionPOST(),
             HTTPMethods.POST,
             parseObjectDefinition("Subject", "subjectName", "Subjects")
         )
+        return JsonPath.parse(result).read<Int>("id")
     }
 
-    private fun createStudentObjectDefinition() {
-        invoker.invoke(
+    private fun createStudentObjectDefinition(): Int {
+        val result = invoker.invoke(
             createObjectDefinitionPOST(),
             HTTPMethods.POST,
             parseObjectDefinition("Student", "studentName", "Students")
         )
+        return JsonPath.parse(result).read("id")
     }
 
     private fun createObjectDefinitionPOST(): String =
