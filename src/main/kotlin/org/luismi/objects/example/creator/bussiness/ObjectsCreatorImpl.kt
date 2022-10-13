@@ -57,6 +57,16 @@ class ObjectsCreatorImpl: ObjectsCreator {
             "Students",
             (studentSubjectsId + 1).toString()
         )
+
+        createObjectLayout(
+            studentObjectDefinitionId.toString(),
+            "/student-object-layout.txt",
+            "StudentLayout",
+            "Student",
+            "studentName",
+            "Subjects",
+            (studentSubjectsId + 1).toString()
+        )
     }
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
