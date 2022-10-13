@@ -71,6 +71,8 @@ class ObjectsCreatorImpl: ObjectsCreator {
         publishObjectDefinition(universityObjectDefinitionId.toString())
         publishObjectDefinition(subjectObjectDefinitionId.toString())
         publishObjectDefinition(studentObjectDefinitionId.toString())
+
+        createUniversities("universities", "universityName")
     }
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
@@ -151,6 +153,20 @@ class ObjectsCreatorImpl: ObjectsCreator {
                     "$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
             HTTPMethods.POST,
             ""
+        )
+    }
+
+    private fun createUniversities(pluralName: String, fieldName: String) {
+        invoker.invoke(
+            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.C}/" +
+                    "$pluralName${LiferayObjectsConstants.BATCH}",
+            HTTPMethods.POST,
+            parser.parseText(
+                getResource("/universities.txt"),
+                buildMap {
+                    put(ParserConstants.FIELD_NAME, fieldName)
+                }
+            )
         )
     }
 

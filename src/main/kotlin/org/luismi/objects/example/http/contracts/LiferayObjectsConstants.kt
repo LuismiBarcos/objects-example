@@ -9,4 +9,6 @@ object LiferayObjectsConstants {
     const val OBJECT_RELATIONSHIPS = "/object-relationships"
     const val OBJECT_LAYOUTS = "/object-layouts"
     const val PUBLISH = "/publish"
+    const val C = "/c"
+    const val BATCH = "/batch"
 }

@@ -1,0 +1,8 @@
+[
+  {
+    "#{fieldName}": "Oxford"
+  },
+  {
+    "#{fieldName}": "Cambridge"
+  }
+]
