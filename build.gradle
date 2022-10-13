@@ -25,3 +25,23 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
 }
+
+task createJar(type: Jar) {
+    group = "build"
+    manifest {
+        attributes  'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'org.luismi.objects.example.MainKt'
+    }
+    baseName = "createObjects"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    def file = file('tool')
+    fileMode = 755
+    destinationDir = file
+    with jar
+}
