@@ -72,7 +72,9 @@ class ObjectsCreatorImpl: ObjectsCreator {
         publishObjectDefinition(subjectObjectDefinitionId.toString())
         publishObjectDefinition(studentObjectDefinitionId.toString())
 
-        createUniversities("universities", "universityName")
+        createCustomObjects("universities", "universityName", "/universities.txt")
+        createCustomObjects("Students", "studentName", "/students.txt")
+        createCustomObjects("Subjects", "subjectName", "/subjects.txt")
     }
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
@@ -156,13 +158,13 @@ class ObjectsCreatorImpl: ObjectsCreator {
         )
     }
 
-    private fun createUniversities(pluralName: String, fieldName: String) {
+    private fun createCustomObjects(pluralName: String, fieldName: String, resourceName: String) {
         invoker.invoke(
             "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.C}/" +
-                    "$pluralName${LiferayObjectsConstants.BATCH}",
+                    "${pluralName.lowercase()}${LiferayObjectsConstants.BATCH}",
             HTTPMethods.POST,
             parser.parseText(
-                getResource("/universities.txt"),
+                getResource(resourceName),
                 buildMap {
                     put(ParserConstants.FIELD_NAME, fieldName)
                 }

@@ -1,0 +1,14 @@
+[
+  {
+    "#{fieldName}": "Pyshics"
+  },
+  {
+    "#{fieldName}": "Calculus"
+  },
+  {
+    "#{fieldName}": "Programming"
+  },
+  {
+    "#{fieldName}": "Algorithms"
+  }
+]
