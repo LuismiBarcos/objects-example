@@ -18,9 +18,9 @@ class ObjectsCreatorImpl: ObjectsCreator {
     private val invoker = DependencyInjector.getDependency<Invoker>(Invoker::class)
 
     override fun createObjects(askerOptions: AskerOptions) {
-        val universityObjectDefinitionId = createUniversityObjectDefinition()
-        val subjectObjectDefinitionId = createSubjectObjectDefinition()
-        val studentObjectDefinitionId = createStudentObjectDefinition()
+        val universityObjectDefinitionId = createObjectDefinition("University", "universityName", "universities")
+        val subjectObjectDefinitionId = createObjectDefinition("Subject", "subjectName", "Subjects")
+        val studentObjectDefinitionId = createObjectDefinition("Student", "studentName", "Students")
 
         println("Object definitions:" +
                 "\n\tUniversity: $universityObjectDefinitionId" +
@@ -29,46 +29,23 @@ class ObjectsCreatorImpl: ObjectsCreator {
         )
     }
 
-    private fun createUniversityObjectDefinition(): Int {
-        val result = invoker.invoke(
-            createObjectDefinitionPOST(),
-            HTTPMethods.POST,
-            parseObjectDefinition("University", "universityName", "universities")
-        )
-        return JsonPath.parse(result).read<Int>("id")
-    }
-
-    private fun createSubjectObjectDefinition(): Int {
-        val result = invoker.invoke(
-            createObjectDefinitionPOST(),
-            HTTPMethods.POST,
-            parseObjectDefinition("Subject", "subjectName", "Subjects")
-        )
-        return JsonPath.parse(result).read<Int>("id")
-    }
-
-    private fun createStudentObjectDefinition(): Int {
-        val result = invoker.invoke(
-            createObjectDefinitionPOST(),
-            HTTPMethods.POST,
-            parseObjectDefinition("Student", "studentName", "Students")
-        )
-        return JsonPath.parse(result).read("id")
-    }
-
-    private fun createObjectDefinitionPOST(): String =
-        "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}"
-
-    private fun parseObjectDefinition(name: String, fieldName: String, pluralName: String): String {
-        return parser.parseText(
-            getResource("/object-definition.txt"),
-            buildMap {
-                put(ParserConstants.NAME, name)
-                put(ParserConstants.FIELD_NAME, fieldName)
-                put(ParserConstants.PLURAL_NAME, pluralName)
-            }
-        )
-    }
+    private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
+        JsonPath
+            .parse(
+                invoker.invoke(
+                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}",
+                    HTTPMethods.POST,
+                    parser.parseText(
+                        getResource("/object-definition.txt"),
+                        buildMap {
+                            put(ParserConstants.NAME, name)
+                            put(ParserConstants.FIELD_NAME, fieldName)
+                            put(ParserConstants.PLURAL_NAME, pluralName)
+                        }
+                    )
+                )
+            )
+            .read("id")
 
     private fun getResource(resourceName: String): String =
         ObjectsCreatorImpl::class.java.getResource(resourceName)?.readText() ?: ""
