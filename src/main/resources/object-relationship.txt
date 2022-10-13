@@ -1,0 +1,10 @@
+{
+  "label": {
+    "en_US": "#{relationshipName}"
+  },
+  "name": "#{relationshipName}",
+  "objectDefinitionId1": #{objectDefinitionId1},
+  "objectDefinitionId2": #{objectDefinitionId2},
+  "objectDefinitionName2": "#{objectDefinitionName2}",
+  "type": "#{relationshipType}"
+}

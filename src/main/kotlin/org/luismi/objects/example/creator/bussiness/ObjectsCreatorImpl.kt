@@ -22,10 +22,20 @@ class ObjectsCreatorImpl: ObjectsCreator {
         val subjectObjectDefinitionId = createObjectDefinition("Subject", "subjectName", "Subjects")
         val studentObjectDefinitionId = createObjectDefinition("Student", "studentName", "Students")
 
-        println("Object definitions:" +
-                "\n\tUniversity: $universityObjectDefinitionId" +
-                "\n\tSubject: $subjectObjectDefinitionId" +
-                "\n\tStudent: $studentObjectDefinitionId"
+        createObjectRelationship(
+            "universityStudents",
+            universityObjectDefinitionId.toString(),
+            studentObjectDefinitionId.toString(),
+            "Student",
+            "oneToMany"
+        )
+
+        createObjectRelationship(
+            "studentSubjects",
+            studentObjectDefinitionId.toString(),
+            subjectObjectDefinitionId.toString(),
+            "Subject",
+            "manyToMany"
         )
     }
 
@@ -46,6 +56,30 @@ class ObjectsCreatorImpl: ObjectsCreator {
                 )
             )
             .read("id")
+
+    private fun createObjectRelationship(
+        relationshipName: String,
+        objectDefinitionId1: String,
+        objectDefinitionId2: String,
+        objectDefinitionName2: String,
+        relationshipType: String
+    ) {
+        invoker.invoke(
+            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
+                    "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
+            HTTPMethods.POST,
+            parser.parseText(
+                getResource("/object-relationship.txt"),
+                buildMap {
+                    put(ParserConstants.RELATIONSHIP_NAME, relationshipName)
+                    put(ParserConstants.OBJECT_DEFINITION_ID_1, objectDefinitionId1)
+                    put(ParserConstants.OBJECT_DEFINITION_ID_2, objectDefinitionId2)
+                    put(ParserConstants.OBJECT_DEFINITION_NAME_2, objectDefinitionName2)
+                    put(ParserConstants.RELATIONSHIP_TYPE, relationshipType)
+                }
+            )
+        )
+    }
 
     private fun getResource(resourceName: String): String =
         ObjectsCreatorImpl::class.java.getResource(resourceName)?.readText() ?: ""
