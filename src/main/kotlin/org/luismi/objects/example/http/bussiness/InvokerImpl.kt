@@ -14,6 +14,9 @@ class InvokerImpl: Invoker {
         val serverURL: String = endpoint
         val url = URL(serverURL)
         val connection = url.openConnection() as HttpURLConnection
+
+        connection.setRequestProperty("Authorization", "Basic dGVzdEBsaWZlcmF5LmNvbTp0ZXN0")
+
         return when(httpMethods) {
             HTTPMethods.GET -> doGet(connection)
             HTTPMethods.POST -> doPost(connection, httpMethods.method, json)
@@ -28,31 +31,19 @@ class InvokerImpl: Invoker {
         connection.setRequestProperty("charset", "utf-8")
         connection.setRequestProperty("Content-lenght", postData.size.toString())
         connection.setRequestProperty("Content-Type", "application/json")
-        connection.setRequestProperty("Authorization", "Basic dGVzdEBsaWZlcmF5LmNvbTp0ZXN0")
 
-        return doRequest(connection, postData)
-    }
-
-    private fun doGet(connection: HttpURLConnection): String {
-        TODO("Not yet implemented")
-    }
-
-    private fun doRequest(connection: HttpURLConnection, postData: ByteArray): String {
         val dataOutputStream = DataOutputStream(connection.outputStream)
         dataOutputStream.write(postData)
         dataOutputStream.flush()
 
+        return doRequest(connection)
+    }
+
+    private fun doGet(connection: HttpURLConnection): String = doRequest(connection)
+
+    private fun doRequest(connection: HttpURLConnection): String {
         println("Requests sent\nResponse code: ${connection.responseCode}")
 
         return connection.inputStream.bufferedReader().readText()
-//        return if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-//            connection.inputStream.bufferedReader().readText()
-//        } else {
-//            connection.errorStream.bufferedReader().readText()
-//    //            val context = JsonPath.parse(data)
-//    //            val status = context.read<String>("status")
-//    //            println("RESULT --> $status")
-//        }
-
     }
 }
