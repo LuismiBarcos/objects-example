@@ -79,7 +79,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
         JsonPath
-            .parse(
+            .read(
                 invoker.invoke(
                     "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}",
                     HTTPMethods.POST,
@@ -91,9 +91,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
                             put(ParserConstants.PLURAL_NAME, pluralName)
                         }
                     )
-                )
-            )
-            .read("id")
+                ), "id")
 
     private fun createObjectRelationship(
         relationshipName: String,
@@ -103,7 +101,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
         relationshipType: String
     ): Int =
         JsonPath
-            .parse(
+            .read(
                 invoker.invoke(
                     "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
                             "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
@@ -118,9 +116,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
                             put(ParserConstants.RELATIONSHIP_TYPE, relationshipType)
                         }
                     )
-                )
-            )
-            .read("id")
+                ), "id")
 
     private fun createObjectLayout(
         objectDefinitionId: String,
