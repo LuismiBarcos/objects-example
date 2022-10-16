@@ -1,14 +1,18 @@
 [
   {
-    "#{fieldName}": "Student 1"
+    "#{fieldName}": "Student 1",
+    "r_universityStudents_c_universityId": #{university1Id}
   },
   {
-    "#{fieldName}": "Student 2"
+    "#{fieldName}": "Student 2",
+    "r_universityStudents_c_universityId": #{university1Id}
   },
   {
-    "#{fieldName}": "Student 3"
+    "#{fieldName}": "Student 3",
+    "r_universityStudents_c_universityId": #{university2Id}
   },
   {
-    "#{fieldName}": "Student 4"
+    "#{fieldName}": "Student 4",
+    "r_universityStudents_c_universityId": #{university2Id}
   }
 ]

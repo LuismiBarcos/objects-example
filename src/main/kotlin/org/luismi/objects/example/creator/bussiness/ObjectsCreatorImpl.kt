@@ -72,9 +72,9 @@ class ObjectsCreatorImpl: ObjectsCreator {
         publishObjectDefinition(subjectObjectDefinitionId.toString())
         publishObjectDefinition(studentObjectDefinitionId.toString())
 
-        createCustomObjects("universities", "universityName", "/universities.txt")
-        createCustomObjects("Students", "studentName", "/students.txt")
-        createCustomObjects("Subjects", "subjectName", "/subjects.txt")
+        createCustomObjects("universities", "universityName", "/universities.txt", emptyList())
+        createCustomObjects("Students", "studentName", "/students.txt", getUniversitiesIds("universities"))
+        createCustomObjects("Subjects", "subjectName", "/subjects.txt", emptyList())
     }
 
     private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
@@ -158,7 +158,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
         )
     }
 
-    private fun createCustomObjects(pluralName: String, fieldName: String, resourceName: String) {
+    private fun createCustomObjects(pluralName: String, fieldName: String, resourceName: String, additionalIds: List<Long>) {
         invoker.invoke(
             "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.C}/" +
                     "${pluralName.lowercase()}${LiferayObjectsConstants.BATCH}",
@@ -167,10 +167,29 @@ class ObjectsCreatorImpl: ObjectsCreator {
                 getResource(resourceName),
                 buildMap {
                     put(ParserConstants.FIELD_NAME, fieldName)
+                    put(
+                        ParserConstants.UNIVERSITY_1_ID,
+                        if (additionalIds.isEmpty()) "" else additionalIds[0].toString()
+                    )
+                    put(
+                        ParserConstants.UNIVERSITY_2_ID,
+                        if (additionalIds.isEmpty()) "" else additionalIds[1].toString()
+                    )
                 }
             )
         )
     }
+
+    private fun getUniversitiesIds(pluralName: String): List<Long> =
+        JsonPath.read(
+            invoker.invoke(
+                "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.C}/" +
+                        "${pluralName.lowercase()}/",
+                HTTPMethods.GET,
+                null
+            ),
+            "$.items[*].id"
+        )
 
     private fun getResource(resourceName: String): String =
         ObjectsCreatorImpl::class.java.getResource(resourceName)?.readText() ?: ""

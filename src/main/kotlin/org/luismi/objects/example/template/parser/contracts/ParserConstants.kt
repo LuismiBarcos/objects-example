@@ -15,5 +15,7 @@ enum class ParserConstants(val text: String) {
     OBJECT_DEFINITION_NAME_2("#{objectDefinitionName2}"),
     RELATIONSHIP_TYPE("#{relationshipType}"),
     RELATED_OBJECT_DEFINITION_NAME("#{relatedObjectDefinitionName}"),
-    OBJECT_RELATIONSHIP_ID("#{objectRelationshipId}")
+    OBJECT_RELATIONSHIP_ID("#{objectRelationshipId}"),
+    UNIVERSITY_1_ID("#{university1Id}"),
+    UNIVERSITY_2_ID("#{university2Id}")
 }
