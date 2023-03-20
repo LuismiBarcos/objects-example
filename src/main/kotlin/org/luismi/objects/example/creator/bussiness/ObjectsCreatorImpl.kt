@@ -81,22 +81,13 @@ class ObjectsCreatorImpl: ObjectsCreator {
             (studentSubjectsId + 1).toString()
         )
 
-        publishObjectDefinition(universityObjectDefinitionId.toString())
-        publishObjectDefinition(subjectObjectDefinitionId.toString())
-        publishObjectDefinition(studentObjectDefinitionId.toString())
+        objectDefinitionService.publishObjectDefinition(universityObjectDefinitionId.toString())
+        objectDefinitionService.publishObjectDefinition(subjectObjectDefinitionId.toString())
+        objectDefinitionService.publishObjectDefinition(studentObjectDefinitionId.toString())
 
         createCustomObjects("universities", "universityName", "/universities.txt", emptyList())
         createCustomObjects("Students", "studentName", "/students.txt", getUniversitiesIds("universities"))
         createCustomObjects("Subjects", "subjectName", "/subjects.txt", emptyList())
-    }
-
-    private fun publishObjectDefinition(objectDefinitionId: String) {
-        invoker.invoke(
-            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
-                    "$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
-            HTTPMethods.POST,
-            ""
-        )
     }
 
     private fun createCustomObjects(pluralName: String, fieldName: String, resourceName: String, additionalIds: List<Long>) {

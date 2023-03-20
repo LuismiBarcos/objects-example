@@ -22,7 +22,12 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService {
     private lateinit var parser: Parser
 
     override fun publishObjectDefinition(objectDefinitionId: String) {
-        TODO("Not yet implemented")
+        invoker.invoke(
+            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
+                    "$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
+            HTTPMethods.POST,
+            ""
+        )
     }
 
     override fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
