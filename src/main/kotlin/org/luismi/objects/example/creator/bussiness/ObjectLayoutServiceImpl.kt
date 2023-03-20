@@ -2,23 +2,15 @@ package org.luismi.objects.example.creator.bussiness
 
 import org.luismi.objects.example.creator.contracts.ObjectLayoutService
 import org.luismi.objects.example.http.contracts.HTTPMethods
-import org.luismi.objects.example.http.contracts.Invoker
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
-import org.luismi.objects.example.template.parser.contracts.Parser
 import org.luismi.objects.example.template.parser.contracts.ParserConstants
 import org.sdi.annotations.Component
-import org.sdi.annotations.Inject
 
 /**
  * @author Luis Miguel Barcos
  */
 @Component(classes = [ObjectLayoutService::class])
-class ObjectLayoutServiceImpl: ObjectLayoutService {
-    @Inject
-    private lateinit var invoker: Invoker
-
-    @Inject
-    private lateinit var parser: Parser
+class ObjectLayoutServiceImpl: ObjectLayoutService, BaseObjectServiceImpl() {
 
     override fun createObjectLayout(
         objectDefinitionId: String,

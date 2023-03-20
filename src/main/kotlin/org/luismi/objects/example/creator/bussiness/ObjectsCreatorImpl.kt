@@ -7,9 +7,7 @@ import org.luismi.objects.example.creator.contracts.ObjectLayoutService
 import org.luismi.objects.example.creator.contracts.ObjectRelationshipService
 import org.luismi.objects.example.creator.contracts.ObjectsCreator
 import org.luismi.objects.example.http.contracts.HTTPMethods
-import org.luismi.objects.example.http.contracts.Invoker
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
-import org.luismi.objects.example.template.parser.contracts.Parser
 import org.luismi.objects.example.template.parser.contracts.ParserConstants
 import org.sdi.annotations.Component
 import org.sdi.annotations.Inject
@@ -18,11 +16,7 @@ import org.sdi.annotations.Inject
  * @author Luis Miguel Barcos
  */
 @Component(classes = [ObjectsCreator::class])
-class ObjectsCreatorImpl: ObjectsCreator {
-    @Inject
-    private lateinit var parser: Parser
-    @Inject
-    private lateinit var invoker: Invoker
+class ObjectsCreatorImpl: ObjectsCreator, BaseObjectServiceImpl() {
     @Inject
     private lateinit var objectDefinitionService: ObjectDefinitionService
     @Inject
@@ -122,7 +116,4 @@ class ObjectsCreatorImpl: ObjectsCreator {
             ),
             "$.items[*].id"
         )
-
-    private fun getResource(resourceName: String): String =
-        ObjectsCreatorImpl::class.java.getResource(resourceName)?.readText() ?: ""
 }
