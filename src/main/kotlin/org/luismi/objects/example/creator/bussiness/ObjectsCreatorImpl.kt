@@ -32,19 +32,19 @@ class ObjectsCreatorImpl: ObjectsCreator, BaseObjectServiceImpl() {
         val studentObjectDefinitionId = objectDefinitionService.createObjectDefinition(student)
 
         val universityStudentsId = objectRelationshipService.createObjectRelationship(
-            "universityStudents",
+            Relationships.UNIVERSITY_STUDENTS.relationshipName,
             universityObjectDefinitionId.toString(),
             studentObjectDefinitionId.toString(),
             student.name,
-            "oneToMany"
+            RelationshipTypes.ONE_TO_MANY.value
         )
 
         val studentSubjectsId = objectRelationshipService.createObjectRelationship(
-            "studentSubjects",
+            Relationships.STUDENT_SUBJECTS.relationshipName,
             studentObjectDefinitionId.toString(),
             subjectObjectDefinitionId.toString(),
             subject.name,
-            "manyToMany"
+            RelationshipTypes.MANY_TO_MANY.value
         )
 
         objectLayoutService.createObjectLayout(
