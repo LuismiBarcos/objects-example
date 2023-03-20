@@ -2,10 +2,7 @@ package org.luismi.objects.example.creator.bussiness
 
 import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
-import org.luismi.objects.example.creator.contracts.ObjectDefinitionService
-import org.luismi.objects.example.creator.contracts.ObjectLayoutService
-import org.luismi.objects.example.creator.contracts.ObjectRelationshipService
-import org.luismi.objects.example.creator.contracts.ObjectsCreator
+import org.luismi.objects.example.creator.contracts.*
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
 import org.luismi.objects.example.template.parser.contracts.ParserConstants
@@ -25,15 +22,20 @@ class ObjectsCreatorImpl: ObjectsCreator, BaseObjectServiceImpl() {
     private lateinit var objectLayoutService: ObjectLayoutService
 
     override fun createObjects(askerOptions: AskerOptions) {
-        val universityObjectDefinitionId = objectDefinitionService.createObjectDefinition("University", "universityName", "Universities")
-        val subjectObjectDefinitionId = objectDefinitionService.createObjectDefinition("Subject", "subjectName", "Subjects")
-        val studentObjectDefinitionId = objectDefinitionService.createObjectDefinition("Student", "studentName", "Students")
+
+        val university = CustomObjects.UNIVERSITY.customObject
+        val student = CustomObjects.STUDENT.customObject
+        val subject = CustomObjects.SUBJECT.customObject
+
+        val universityObjectDefinitionId = objectDefinitionService.createObjectDefinition(university)
+        val subjectObjectDefinitionId = objectDefinitionService.createObjectDefinition(subject)
+        val studentObjectDefinitionId = objectDefinitionService.createObjectDefinition(student)
 
         val universityStudentsId = objectRelationshipService.createObjectRelationship(
             "universityStudents",
             universityObjectDefinitionId.toString(),
             studentObjectDefinitionId.toString(),
-            "Student",
+            student.name,
             "oneToMany"
         )
 
@@ -41,37 +43,28 @@ class ObjectsCreatorImpl: ObjectsCreator, BaseObjectServiceImpl() {
             "studentSubjects",
             studentObjectDefinitionId.toString(),
             subjectObjectDefinitionId.toString(),
-            "Subject",
+            subject.name,
             "manyToMany"
         )
 
         objectLayoutService.createObjectLayout(
             universityObjectDefinitionId.toString(),
-            "/object-layout.txt",
-            "UniversityLayout",
-            "University",
-            "universityName",
-            "Students",
+            university,
+            student.pluralName,
             universityStudentsId.toString()
         )
 
         objectLayoutService.createObjectLayout(
             subjectObjectDefinitionId.toString(),
-            "/object-layout.txt",
-            "SubjectLayout",
-            "Subject",
-            "subjectName",
-            "Students",
+            subject,
+            student.pluralName,
             (studentSubjectsId + 1).toString()
         )
 
         objectLayoutService.createObjectLayout(
             studentObjectDefinitionId.toString(),
-            "/student-object-layout.txt",
-            "StudentLayout",
-            "Student",
-            "studentName",
-            "Subjects",
+            student,
+            subject.pluralName,
             (studentSubjectsId + 1).toString()
         )
 
@@ -79,20 +72,20 @@ class ObjectsCreatorImpl: ObjectsCreator, BaseObjectServiceImpl() {
         objectDefinitionService.publishObjectDefinition(subjectObjectDefinitionId.toString())
         objectDefinitionService.publishObjectDefinition(studentObjectDefinitionId.toString())
 
-        createCustomObjects("universities", "universityName", "/universities.txt", emptyList())
-        createCustomObjects("Students", "studentName", "/students.txt", getUniversitiesIds("universities"))
-        createCustomObjects("Subjects", "subjectName", "/subjects.txt", emptyList())
+        createCustomObjects(university, emptyList())
+        createCustomObjects(student, getUniversitiesIds(university.pluralName))
+        createCustomObjects(subject, emptyList())
     }
 
-    private fun createCustomObjects(pluralName: String, fieldName: String, resourceName: String, additionalIds: List<Long>) {
+    private fun createCustomObjects(customObject: CustomObject, additionalIds: List<Long>) {
         invoker.invoke(
             "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.C}/" +
-                    "${pluralName.lowercase()}${LiferayObjectsConstants.BATCH}",
+                    "${customObject.pluralName.lowercase()}${LiferayObjectsConstants.BATCH}",
             HTTPMethods.POST,
             parser.parseText(
-                getResource(resourceName),
+                getResource(customObject.customObjectResourceName),
                 buildMap {
-                    put(ParserConstants.FIELD_NAME, fieldName)
+                    put(ParserConstants.FIELD_NAME, customObject.fieldName)
                     put(
                         ParserConstants.UNIVERSITY_1_ID,
                         if (additionalIds.isEmpty()) "" else additionalIds[0].toString()

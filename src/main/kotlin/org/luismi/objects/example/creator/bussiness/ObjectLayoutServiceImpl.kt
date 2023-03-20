@@ -1,5 +1,6 @@
 package org.luismi.objects.example.creator.bussiness
 
+import org.luismi.objects.example.creator.contracts.CustomObject
 import org.luismi.objects.example.creator.contracts.ObjectLayoutService
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
@@ -14,10 +15,7 @@ class ObjectLayoutServiceImpl: ObjectLayoutService, BaseObjectServiceImpl() {
 
     override fun createObjectLayout(
         objectDefinitionId: String,
-        resourceName: String,
-        name: String,
-        objectDefinitionName: String,
-        fieldName: String,
+        customObject: CustomObject,
         relatedObjectDefinitionName: String,
         objectRelationshipId: String,
     ) {
@@ -26,12 +24,12 @@ class ObjectLayoutServiceImpl: ObjectLayoutService, BaseObjectServiceImpl() {
                     "$objectDefinitionId${LiferayObjectsConstants.OBJECT_LAYOUTS}",
             HTTPMethods.POST,
             parser.parseText(
-                getResource(resourceName),
+                getResource(customObject.objectLayoutResourceName),
                 buildMap {
-                    put(ParserConstants.NAME, name)
+                    put(ParserConstants.NAME, customObject.layoutName)
                     put(ParserConstants.OBJECT_DEFINITION_ID, objectDefinitionId)
-                    put(ParserConstants.OBJECT_DEFINITION_NAME, objectDefinitionName)
-                    put(ParserConstants.FIELD_NAME, fieldName)
+                    put(ParserConstants.OBJECT_DEFINITION_NAME, customObject.name)
+                    put(ParserConstants.FIELD_NAME, customObject.fieldName)
                     put(ParserConstants.RELATED_OBJECT_DEFINITION_NAME, relatedObjectDefinitionName)
                     put(ParserConstants.OBJECT_RELATIONSHIP_ID, objectRelationshipId)
                 }

@@ -1,6 +1,7 @@
 package org.luismi.objects.example.creator.bussiness
 
 import com.jayway.jsonpath.JsonPath
+import org.luismi.objects.example.creator.contracts.CustomObject
 import org.luismi.objects.example.creator.contracts.ObjectDefinitionService
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
@@ -22,7 +23,7 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
         )
     }
 
-    override fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
+    override fun createObjectDefinition(customObject: CustomObject): Int =
         JsonPath
             .read(
                 invoker.invoke(
@@ -31,9 +32,9 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
                     parser.parseText(
                         getResource("/object-definition.txt"),
                         buildMap {
-                            put(ParserConstants.NAME, name)
-                            put(ParserConstants.FIELD_NAME, fieldName)
-                            put(ParserConstants.PLURAL_NAME, pluralName)
+                            put(ParserConstants.NAME, customObject.name)
+                            put(ParserConstants.FIELD_NAME, customObject.fieldName)
+                            put(ParserConstants.PLURAL_NAME, customObject.pluralName)
                         }
                     )
                 ), "id")

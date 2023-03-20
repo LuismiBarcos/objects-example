@@ -13,10 +13,8 @@ interface ObjectDefinitionService: BaseObjectService {
 
     /**
      * Create an object definition
-     * @param fieldName
-     * @param name
-     * @param pluralName
+     * @param customObject
      * @return the created object definition Id
      */
-    fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int
+    fun createObjectDefinition(customObject: CustomObject): Int
 }

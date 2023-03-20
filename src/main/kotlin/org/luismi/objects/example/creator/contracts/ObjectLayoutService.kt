@@ -7,19 +7,13 @@ interface ObjectLayoutService: BaseObjectService {
     /**
      * Create and object layout to an object definition
      * @param objectDefinitionId
-     * @param resourceName
-     * @param name
-     * @param objectDefinitionName
-     * @param fieldName
+     * @param customObject
      * @param relatedObjectDefinitionName
      * @param objectRelationshipId
      */
     fun createObjectLayout(
         objectDefinitionId: String,
-        resourceName: String,
-        name: String,
-        objectDefinitionName: String,
-        fieldName: String,
+        customObject: CustomObject,
         relatedObjectDefinitionName: String,
         objectRelationshipId: String
     )
