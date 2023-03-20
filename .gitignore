@@ -169,3 +169,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,intellij,gradle
 
+# Ignore .idea folder
+.idea
+
