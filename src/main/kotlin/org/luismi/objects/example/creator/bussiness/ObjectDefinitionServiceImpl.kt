@@ -14,6 +14,8 @@ import org.sdi.annotations.Component
 @Component(classes = [ObjectDefinitionService::class])
 class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImpl() {
 
+    private val objectDefinitionResourceName = "/object-definition.txt"
+
     override fun publishObjectDefinition(objectDefinitionId: String) {
         invoker.invoke(
             "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
@@ -23,14 +25,14 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
         )
     }
 
-    override fun createObjectDefinition(customObject: CustomObject): Int =
-        JsonPath
+    override fun createObjectDefinition(customObject: CustomObject): Int {
+        return JsonPath
             .read(
                 invoker.invoke(
                     "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}",
                     HTTPMethods.POST,
                     parser.parseText(
-                        getResource("/object-definition.txt"),
+                        getResource(objectDefinitionResourceName),
                         buildMap {
                             put(ParserConstants.NAME, customObject.name)
                             put(ParserConstants.FIELD_NAME, customObject.fieldName)
@@ -38,4 +40,5 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
                         }
                     )
                 ), "id")
+    }
 }

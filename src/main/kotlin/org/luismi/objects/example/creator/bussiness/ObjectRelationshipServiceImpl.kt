@@ -13,6 +13,8 @@ import org.sdi.annotations.Component
 @Component(classes = [ObjectRelationshipService::class])
 class ObjectRelationshipServiceImpl: ObjectRelationshipService, BaseObjectServiceImpl() {
 
+    private val objectRelationshipResourceName = "/object-relationship.txt"
+
     override fun createObjectRelationship(
         relationshipName: String,
         objectDefinitionId1: String,
@@ -27,7 +29,7 @@ class ObjectRelationshipServiceImpl: ObjectRelationshipService, BaseObjectServic
                             "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
                     HTTPMethods.POST,
                     parser.parseText(
-                        getResource("/object-relationship.txt"),
+                        getResource(objectRelationshipResourceName),
                         buildMap {
                             put(ParserConstants.RELATIONSHIP_NAME, relationshipName)
                             put(ParserConstants.OBJECT_DEFINITION_ID_1, objectDefinitionId1)
