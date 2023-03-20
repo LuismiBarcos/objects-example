@@ -2,6 +2,7 @@ package org.luismi.objects.example.creator.bussiness
 
 import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
+import org.luismi.objects.example.creator.contracts.ObjectDefinitionService
 import org.luismi.objects.example.creator.contracts.ObjectsCreator
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.Invoker
@@ -20,11 +21,13 @@ class ObjectsCreatorImpl: ObjectsCreator {
     private lateinit var parser: Parser
     @Inject
     private lateinit var invoker: Invoker
+    @Inject
+    private lateinit var objectDefinitionService: ObjectDefinitionService
 
     override fun createObjects(askerOptions: AskerOptions) {
-        val universityObjectDefinitionId = createObjectDefinition("University", "universityName", "universities")
-        val subjectObjectDefinitionId = createObjectDefinition("Subject", "subjectName", "Subjects")
-        val studentObjectDefinitionId = createObjectDefinition("Student", "studentName", "Students")
+        val universityObjectDefinitionId = objectDefinitionService.createObjectDefinition("University", "universityName", "Universities")
+        val subjectObjectDefinitionId = objectDefinitionService.createObjectDefinition("Subject", "subjectName", "Subjects")
+        val studentObjectDefinitionId = objectDefinitionService.createObjectDefinition("Student", "studentName", "Students")
 
         val universityStudentsId = createObjectRelationship(
             "universityStudents",
@@ -80,22 +83,6 @@ class ObjectsCreatorImpl: ObjectsCreator {
         createCustomObjects("Students", "studentName", "/students.txt", getUniversitiesIds("universities"))
         createCustomObjects("Subjects", "subjectName", "/subjects.txt", emptyList())
     }
-
-    private fun createObjectDefinition(name: String, fieldName: String, pluralName: String): Int =
-        JsonPath
-            .read(
-                invoker.invoke(
-                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}",
-                    HTTPMethods.POST,
-                    parser.parseText(
-                        getResource("/object-definition.txt"),
-                        buildMap {
-                            put(ParserConstants.NAME, name)
-                            put(ParserConstants.FIELD_NAME, fieldName)
-                            put(ParserConstants.PLURAL_NAME, pluralName)
-                        }
-                    )
-                ), "id")
 
     private fun createObjectRelationship(
         relationshipName: String,
