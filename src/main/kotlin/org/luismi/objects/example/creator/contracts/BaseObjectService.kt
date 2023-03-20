@@ -5,6 +5,6 @@ package org.luismi.objects.example.creator.contracts
  */
 interface BaseObjectService {
 
-    fun getResource(resourceName: String): String =
-        BaseObjectService::class.java.getResource(resourceName)?.readText() ?: ""
+    fun getResource(resourceName: String): String
+
 }
