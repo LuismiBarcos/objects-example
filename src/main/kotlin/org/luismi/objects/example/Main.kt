@@ -1,33 +1,22 @@
 package org.luismi.objects.example
 
-import org.luismi.objects.example.asker.bussiness.AskerImpl
-import org.luismi.objects.example.asker.contracts.Asker
-import org.luismi.objects.example.asker.contracts.AskerOptions
-import org.luismi.objects.example.creator.bussiness.ObjectsCreatorImpl
-import org.luismi.objects.example.creator.contracts.ObjectsCreator
-import org.luismi.objects.example.dependency.injector.DependencyInjector
-import org.luismi.objects.example.http.bussiness.InvokerImpl
-import org.luismi.objects.example.http.contracts.Invoker
-import org.luismi.objects.example.template.parser.bussiness.ParserImpl
-import org.luismi.objects.example.template.parser.contracts.Parser
+import org.luismi.objects.example.application.Application
+import org.sdi.injector.SimpleDependencyInjector
 
 /**
  * @author Luis Miguel Barcos
  */
+
+private class Main
+
 fun main() {
-    //Inject dependencies
-    DependencyInjector.addDependency(Asker::class, AskerImpl())
-    DependencyInjector.addDependency(Parser::class, ParserImpl())
-    DependencyInjector.addDependency(Invoker::class, InvokerImpl())
-    DependencyInjector.addDependency(ObjectsCreator::class, ObjectsCreatorImpl())
+    // Use SDI
+    val dependencyInjector = SimpleDependencyInjector()
+    dependencyInjector.init(Main::class.java)
 
-    // Get implementations
-    val asker = DependencyInjector.getDependency<Asker>(Asker::class)
-    val objectsCreator = DependencyInjector.getDependency<ObjectsCreator>(ObjectsCreator::class)
+    //Get application
+    val application = dependencyInjector.getService(Application::class.java)
 
-    // Main code
-    when(asker.askForInfo("Create Students as Custom Objects? (y/n)")){
-        AskerOptions.YES -> objectsCreator.createObjects(AskerOptions.YES)
-        AskerOptions.NO -> objectsCreator.createObjects(AskerOptions.NO)
-    }
+    //Start application
+    application.init()
 }
