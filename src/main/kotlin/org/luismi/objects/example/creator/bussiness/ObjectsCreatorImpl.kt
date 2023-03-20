@@ -3,6 +3,7 @@ package org.luismi.objects.example.creator.bussiness
 import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
 import org.luismi.objects.example.creator.contracts.ObjectDefinitionService
+import org.luismi.objects.example.creator.contracts.ObjectRelationshipService
 import org.luismi.objects.example.creator.contracts.ObjectsCreator
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.Invoker
@@ -23,13 +24,15 @@ class ObjectsCreatorImpl: ObjectsCreator {
     private lateinit var invoker: Invoker
     @Inject
     private lateinit var objectDefinitionService: ObjectDefinitionService
+    @Inject
+    private lateinit var objectRelationshipService: ObjectRelationshipService
 
     override fun createObjects(askerOptions: AskerOptions) {
         val universityObjectDefinitionId = objectDefinitionService.createObjectDefinition("University", "universityName", "Universities")
         val subjectObjectDefinitionId = objectDefinitionService.createObjectDefinition("Subject", "subjectName", "Subjects")
         val studentObjectDefinitionId = objectDefinitionService.createObjectDefinition("Student", "studentName", "Students")
 
-        val universityStudentsId = createObjectRelationship(
+        val universityStudentsId = objectRelationshipService.createObjectRelationship(
             "universityStudents",
             universityObjectDefinitionId.toString(),
             studentObjectDefinitionId.toString(),
@@ -37,7 +40,7 @@ class ObjectsCreatorImpl: ObjectsCreator {
             "oneToMany"
         )
 
-        val studentSubjectsId = createObjectRelationship(
+        val studentSubjectsId = objectRelationshipService.createObjectRelationship(
             "studentSubjects",
             studentObjectDefinitionId.toString(),
             subjectObjectDefinitionId.toString(),
@@ -83,31 +86,6 @@ class ObjectsCreatorImpl: ObjectsCreator {
         createCustomObjects("Students", "studentName", "/students.txt", getUniversitiesIds("universities"))
         createCustomObjects("Subjects", "subjectName", "/subjects.txt", emptyList())
     }
-
-    private fun createObjectRelationship(
-        relationshipName: String,
-        objectDefinitionId1: String,
-        objectDefinitionId2: String,
-        objectDefinitionName2: String,
-        relationshipType: String
-    ): Int =
-        JsonPath
-            .read(
-                invoker.invoke(
-                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
-                            "$objectDefinitionId1${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}",
-                    HTTPMethods.POST,
-                    parser.parseText(
-                        getResource("/object-relationship.txt"),
-                        buildMap {
-                            put(ParserConstants.RELATIONSHIP_NAME, relationshipName)
-                            put(ParserConstants.OBJECT_DEFINITION_ID_1, objectDefinitionId1)
-                            put(ParserConstants.OBJECT_DEFINITION_ID_2, objectDefinitionId2)
-                            put(ParserConstants.OBJECT_DEFINITION_NAME_2, objectDefinitionName2)
-                            put(ParserConstants.RELATIONSHIP_TYPE, relationshipType)
-                        }
-                    )
-                ), "id")
 
     private fun createObjectLayout(
         objectDefinitionId: String,
