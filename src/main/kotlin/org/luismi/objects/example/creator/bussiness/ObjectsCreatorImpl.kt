@@ -3,19 +3,23 @@ package org.luismi.objects.example.creator.bussiness
 import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
 import org.luismi.objects.example.creator.contracts.ObjectsCreator
-import org.luismi.objects.example.dependency.injector.DependencyInjector
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.Invoker
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
 import org.luismi.objects.example.template.parser.contracts.Parser
 import org.luismi.objects.example.template.parser.contracts.ParserConstants
+import org.sdi.annotations.Component
+import org.sdi.annotations.Inject
 
 /**
  * @author Luis Miguel Barcos
  */
+@Component(classes = [ObjectsCreator::class])
 class ObjectsCreatorImpl: ObjectsCreator {
-    private val parser = DependencyInjector.getDependency<Parser>(Parser::class)
-    private val invoker = DependencyInjector.getDependency<Invoker>(Invoker::class)
+    @Inject
+    private lateinit var parser: Parser
+    @Inject
+    private lateinit var invoker: Invoker
 
     override fun createObjects(askerOptions: AskerOptions) {
         val universityObjectDefinitionId = createObjectDefinition("University", "universityName", "universities")

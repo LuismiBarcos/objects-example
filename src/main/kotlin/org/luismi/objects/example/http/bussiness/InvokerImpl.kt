@@ -2,6 +2,7 @@ package org.luismi.objects.example.http.bussiness
 
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.Invoker
+import org.sdi.annotations.Component
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -9,6 +10,7 @@ import java.net.URL
 /**
  * @author Luis Miguel Barcos
  */
+@Component(classes = [Invoker::class])
 class InvokerImpl: Invoker {
     override fun invoke(endpoint:String, httpMethods: HTTPMethods, json: String?): String {
         val serverURL: String = endpoint

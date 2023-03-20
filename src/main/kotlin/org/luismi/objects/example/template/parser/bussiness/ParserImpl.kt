@@ -2,10 +2,12 @@ package org.luismi.objects.example.template.parser.bussiness
 
 import org.luismi.objects.example.template.parser.contracts.Parser
 import org.luismi.objects.example.template.parser.contracts.ParserConstants
+import org.sdi.annotations.Component
 
 /**
  * @author Luis Miguel Barcos
  */
+@Component(classes = [Parser::class])
 class ParserImpl: Parser {
     override fun parseText(text: String, replacements: Map<ParserConstants, String>): String {
         val iterator = replacements.iterator()
