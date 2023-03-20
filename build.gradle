@@ -12,6 +12,7 @@ repositories {
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation 'com.jayway.jsonpath:json-path:2.7.0'
+    implementation 'io.github.luismibarcos:SDI:0.1'
 }
 
 test {
