@@ -41,4 +41,15 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
                     )
                 ), "id")
     }
+
+    override fun getAllCustomObjectDefinitions(): List<Int> =
+        JsonPath
+            .parse(
+                invoker.invoke(
+                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}" +
+                            "?restrictFields=actions&fields=id,system",
+                    HTTPMethods.GET,
+                    null
+                ))
+            .read("\$..[?(@.system == false)].id")
 }

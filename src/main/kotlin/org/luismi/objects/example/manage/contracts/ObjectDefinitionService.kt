@@ -17,4 +17,10 @@ interface ObjectDefinitionService: BaseObjectService {
      * @return the created object definition Id
      */
     fun createObjectDefinition(customObject: CustomObject): Int
+
+    /**
+     * Get all the object definitions in the current Liferay portal instance
+     * @return a list with all the object definition ids
+     */
+    fun getAllCustomObjectDefinitions(): List<Int>
 }
