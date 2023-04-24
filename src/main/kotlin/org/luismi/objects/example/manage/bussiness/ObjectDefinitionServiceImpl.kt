@@ -15,11 +15,12 @@ import org.sdi.annotations.Component
 class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImpl() {
 
     private val objectDefinitionResourceName = "/object-definition.txt"
+    private val baseObjectDefinitionsPath =
+        "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}"
 
     override fun publishObjectDefinition(objectDefinitionId: String) {
         invoker.invoke(
-            "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
-                    "$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
+            "$baseObjectDefinitionsPath/$objectDefinitionId${LiferayObjectsConstants.PUBLISH}",
             HTTPMethods.POST,
             ""
         )
@@ -29,7 +30,7 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
         return JsonPath
             .read(
                 invoker.invoke(
-                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}",
+                    baseObjectDefinitionsPath,
                     HTTPMethods.POST,
                     parser.parseText(
                         getResource(objectDefinitionResourceName),
@@ -45,9 +46,7 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
     override fun getAllCustomObjectDefinitions(): List<Int> =
         JsonPath
             .parse(
-                invoker.invoke(
-                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}" +
-                            "?restrictFields=actions&fields=id,system",
+                invoker.invoke("$baseObjectDefinitionsPath?restrictFields=actions&fields=id,system",
                     HTTPMethods.GET,
                     null
                 ))
