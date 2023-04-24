@@ -1,7 +1,7 @@
-package org.luismi.objects.example.creator.bussiness
+package org.luismi.objects.example.manage.bussiness
 
-import org.luismi.objects.example.creator.contracts.CustomObject
-import org.luismi.objects.example.creator.contracts.ObjectLayoutService
+import org.luismi.objects.example.manage.contracts.CustomObject
+import org.luismi.objects.example.manage.contracts.ObjectLayoutService
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
 import org.luismi.objects.example.template.parser.contracts.ParserConstants

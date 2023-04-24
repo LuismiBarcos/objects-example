@@ -1,6 +1,6 @@
-package org.luismi.objects.example.creator.bussiness
+package org.luismi.objects.example.manage.bussiness
 
-import org.luismi.objects.example.creator.contracts.BaseObjectService
+import org.luismi.objects.example.manage.contracts.BaseObjectService
 import org.luismi.objects.example.http.contracts.Invoker
 import org.luismi.objects.example.template.parser.contracts.Parser
 import org.sdi.annotations.Inject

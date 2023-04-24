@@ -1,8 +1,8 @@
-package org.luismi.objects.example.creator.bussiness
+package org.luismi.objects.example.manage.bussiness
 
 import com.jayway.jsonpath.JsonPath
 import org.luismi.objects.example.asker.contracts.AskerOptions
-import org.luismi.objects.example.creator.contracts.*
+import org.luismi.objects.example.manage.contracts.*
 import org.luismi.objects.example.http.contracts.HTTPMethods
 import org.luismi.objects.example.http.contracts.LiferayObjectsConstants
 import org.luismi.objects.example.template.parser.contracts.ParserConstants

@@ -1,4 +1,4 @@
-package org.luismi.objects.example.creator.contracts
+package org.luismi.objects.example.manage.contracts
 
 /**
  * @author Luis Miguel Barcos
