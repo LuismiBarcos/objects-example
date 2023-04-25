@@ -22,6 +22,7 @@ class InvokerImpl: Invoker {
         return when(httpMethods) {
             HTTPMethods.GET -> doGet(connection)
             HTTPMethods.POST -> doPost(connection, httpMethods.method, json)
+            HTTPMethods.DELETE -> doDelete(connection, httpMethods.method)
         }
     }
 
@@ -31,7 +32,7 @@ class InvokerImpl: Invoker {
         val postData: ByteArray = json!!.toByteArray()
 
         connection.setRequestProperty("charset", "utf-8")
-        connection.setRequestProperty("Content-lenght", postData.size.toString())
+        connection.setRequestProperty("Content-length", postData.size.toString())
         connection.setRequestProperty("Content-Type", "application/json")
 
         val dataOutputStream = DataOutputStream(connection.outputStream)
@@ -42,6 +43,11 @@ class InvokerImpl: Invoker {
     }
 
     private fun doGet(connection: HttpURLConnection): String = doRequest(connection)
+
+    private fun doDelete(connection: HttpURLConnection, method: String): String {
+        connection.requestMethod = method
+        return doRequest(connection)
+    }
 
     private fun doRequest(connection: HttpURLConnection): String {
         println("Requests sent\nResponse code: ${connection.responseCode}")
