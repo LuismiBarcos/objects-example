@@ -40,4 +40,24 @@ class ObjectRelationshipServiceImpl: ObjectRelationshipService, BaseObjectServic
                     )
                 ), "id")
 
+    override fun deleteCustomObjectDefinitionRelationships(objectDefinitionId: Int) {
+        getCustomObjectDefinitionRelationships(objectDefinitionId).forEach {
+            invoker.invoke("${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN}" +
+                    "${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}/$it",
+                HTTPMethods.DELETE,
+                null)
+        }
+    }
+
+    private fun getCustomObjectDefinitionRelationships(objectDefinitionId: Int): List<Int> =
+        JsonPath
+            .parse(
+                invoker.invoke(
+                    "${LiferayObjectsConstants.SERVER}${LiferayObjectsConstants.OBJECT_ADMIN_DEFINITION}/" +
+                            "$objectDefinitionId${LiferayObjectsConstants.OBJECT_RELATIONSHIPS}?restrictFields=actions&fields=id,reverse",
+                    HTTPMethods.GET,
+                    null
+                ))
+            .read("\$..[?(@.reverse == false)].id")
+
 }

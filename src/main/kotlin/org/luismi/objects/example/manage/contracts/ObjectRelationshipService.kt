@@ -5,6 +5,15 @@ package org.luismi.objects.example.manage.contracts
  */
 interface ObjectRelationshipService: BaseObjectService {
 
+    /**
+     * Create an object relationship
+     * @param relationshipName
+     * @param objectDefinitionId1
+     * @param objectDefinitionId2
+     * @param objectDefinitionName2
+     * @param relationshipType
+     * @return the id of the new object relationship
+     */
     fun createObjectRelationship(
         relationshipName: String,
         objectDefinitionId1: String,
@@ -12,5 +21,11 @@ interface ObjectRelationshipService: BaseObjectService {
         objectDefinitionName2: String,
         relationshipType: String,
     ): Int
+
+    /**
+     * Deletes the objects relationships of an object
+     * @param objectDefinitionId
+     */
+    fun deleteCustomObjectDefinitionRelationships(objectDefinitionId: Int)
 
 }
