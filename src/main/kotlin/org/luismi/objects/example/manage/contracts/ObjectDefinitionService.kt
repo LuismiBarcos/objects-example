@@ -23,4 +23,10 @@ interface ObjectDefinitionService: BaseObjectService {
      * @return a list with all the object definition ids
      */
     fun getAllCustomObjectDefinitions(): List<Int>
+
+    /**
+     * Delete a specific custom object definition
+     * @param objectDefinitionId
+     */
+    fun deleteCustomObjectDefinition(objectDefinitionId: Int)
 }

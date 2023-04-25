@@ -51,4 +51,8 @@ class ObjectDefinitionServiceImpl: ObjectDefinitionService, BaseObjectServiceImp
                     null
                 ))
             .read("\$..[?(@.system == false)].id")
+
+    override fun deleteCustomObjectDefinition(objectDefinitionId: Int) {
+        invoker.invoke("$baseObjectDefinitionsPath/$objectDefinitionId", HTTPMethods.DELETE, null)
+    }
 }
